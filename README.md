@@ -16,13 +16,14 @@ pip install django-timescaledb
 
 
 2. Use as DATABASE engine in settings.py:
-
+```python
     DATABASES = {
     'default': {
         'ENGINE': 'timescale',
         ...
     },
 }
+```
 
 3. Use TimescaleDateTimeField in your models. A [hypertable](https://docs.timescale.com/latest/using-timescaledb/hypertables#react-docs) will automatically be created.
 ```
