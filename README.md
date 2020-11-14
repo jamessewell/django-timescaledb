@@ -26,7 +26,7 @@ pip install django-timescaledb
 ```
 
 3. Use TimescaleDateTimeField in your models. A [hypertable](https://docs.timescale.com/latest/using-timescaledb/hypertables#react-docs) will automatically be created.
-```
+```python
 from timescale.fields import TimescaleDateTimeField
 
 class SensorLog(models.Model):
