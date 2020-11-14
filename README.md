@@ -1,22 +1,36 @@
 # Django timescaledb
 
-A database connector for timescaledb. 
+A database backend for Timescaledb. 
 
-Still WIP
+Based on [gist](https://gist.github.com/dedsm/fc74f04eb70d78459ff0847ef16f2e7a) from WeRiot.
 
+Still WIP.
 
 Quick start
 -----------
 
-1. 
-Install via pip
+1. Install via pip
 ```
 pip install django-timescaledb
 ```
 
-    
 
-2. Use as DATABASE engine in settings.py
+2. Use as DATABASE engine in settings.py:
 
-    'ENGINE': 'timescale'
+    DATABASES = {
+    'default': {
+        'ENGINE': 'timescale',
+        ...
+    },
+}
+
+3. Use TimescaleDateTimeField in your models. A [hypertable](https://docs.timescale.com/latest/using-timescaledb/hypertables#react-docs) will automatically be created.
+```
+from timescale.fields import TimescaleDateTimeField
+
+class SensorLog(models.Model):
+   date = TimescaleDateTimeField(interval="1 day")
+   value = models.IntegerField()
+
+```
 
