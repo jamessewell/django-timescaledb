@@ -1,1 +1,4 @@
 *.pyc
+dist/
+build/
+django_timescaledb.egg-info/
