@@ -2,14 +2,19 @@ import logging
 
 from django.contrib.gis.db.backends.postgis.base import \
     DatabaseWrapper as PostgisDBWrapper
-from django.db import ProgrammingError
 
+from django.db import ProgrammingError
+from django.conf import settings
+from django.core.exceptions import ImproperlyConfigured
+
+from . import base_impl
 from .schema import TimescaleSchemaEditor
+
 
 logger = logging.getLogger(__name__)
 
 
-class DatabaseWrapper(PostgisDBWrapper):
+class DatabaseWrapper(base_impl.backend()):
     SchemaEditorClass = TimescaleSchemaEditor
 
     def prepare_database(self):
