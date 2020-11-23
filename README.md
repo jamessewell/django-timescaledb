@@ -19,7 +19,7 @@ pip install django-timescaledb
 ```python
     DATABASES = {
     'default': {
-        'ENGINE': 'timescale.engine',
+        'ENGINE': 'timescale',
         ...
     },
 }
