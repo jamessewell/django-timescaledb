@@ -4,7 +4,6 @@ A database backend for Timescaledb.
 
 Based on [gist](https://gist.github.com/dedsm/fc74f04eb70d78459ff0847ef16f2e7a) from WeRiot.
 
-Still WIP.
 
 ## Quick start
 
@@ -40,7 +39,7 @@ class SensorLog(models.Model):
 
 Use a custom PostgreSQL db backend like PostGIS.
 
-```
+```python
 # Configure via settings.py
 
 TIMESCALE_DB_BACKEND_BASE = "django.contrib.gis.db.backends.postgis"
