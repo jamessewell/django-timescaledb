@@ -10,7 +10,7 @@ Still WIP.
 
 1. Install via pip
 
-```
+```bash
 pip install django-timescaledb
 ```
 

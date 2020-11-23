@@ -7,7 +7,6 @@ Based on
 `gist <https://gist.github.com/dedsm/fc74f04eb70d78459ff0847ef16f2e7a>`__
 from WeRiot.
 
-Still WIP.
 
 Quick start
 -----------
@@ -46,7 +45,7 @@ Custom DB backend
 
 Use a custom PostgreSQL db backend like PostGIS.
 
-::
+.. code:: python
 
     # Configure via settings.py
 
