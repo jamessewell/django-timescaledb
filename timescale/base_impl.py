@@ -1,18 +1,12 @@
 import importlib
 import logging
 
-from django.contrib.gis.db.backends.postgis.base import \
-    DatabaseWrapper as PostgisDBWrapper
-
 from django.db.backends.postgresql.base import (  # isort:skip
     DatabaseWrapper as Psycopg2DatabaseWrapper,
 )
 
-from django.db import ProgrammingError
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
-
-from .schema import TimescaleSchemaEditor
 
 logger = logging.getLogger(__name__)
 
