@@ -34,6 +34,35 @@ class SensorLog(models.Model):
    value = models.IntegerField()
 
 ```
+### Reading Data
+
+"TimescaleDB hypertables are designed to behave in the same manner as PostgreSQL database tables for reading data, using standard SQL commands."
+
+We can use any Django ORM methods, expressions or functions to build
+
+#### Time Bucket
+
+TimescaleDB's time_bucket acts as a more powerful version of the PostgreSQL function date_trunc. It accepts arbitrary time intervals as well as optional offsets and returns the bucket start time.
+
+In SQL this can be written as such:
+
+```sql
+
+SELECT time_bucket('5 minutes', time) AS five_min, avg(cpu)
+  FROM metrics
+  GROUP BY five_min
+  ORDER BY five_min DESC LIMIT 12;
+
+```
+
+We have abstracted this into a Django expression, to make the same query using the Django ORM would look like this:
+
+```python
+
+Metric.objects.all().values(five_min=TimeBucket("time", "5 minutes")).annotate(avg_cpu=AVG("cpu"))
+
+```
+
 
 ### Custom DB backend
 
