@@ -48,10 +48,10 @@ In SQL this can be written as such:
 
 ```sql
 
-SELECT time_bucket('5 minutes', time) AS five_min, avg(cpu)
-  FROM metrics
-  GROUP BY five_min
-  ORDER BY five_min DESC LIMIT 12;
+SELECT time_bucket('1 hour', time) AS bucket, avg(cpu)
+  FROM metrics_metric
+  GROUP BY bucket
+  ORDER BY bucket DESC LIMIT 12;
 
 ```
 
@@ -59,7 +59,7 @@ We have abstracted this into a Django expression, to make the same query using t
 
 ```python
 
-Metric.objects.all().values(five_min=TimeBucket("time", "5 minutes")).annotate(avg_cpu=AVG("cpu"))
+Metric.objects.all().values(five_min=TimeBucket("time", "1 hour")).annotate(avg_cpu=Avg("cpu"))
 
 ```
 

@@ -2,3 +2,6 @@
 dist/
 build/
 django_timescaledb.egg-info/
+.env
+*ipynb
+example/timescale
