@@ -3,8 +3,8 @@ import logging
 from django.db import ProgrammingError
 from django.core.exceptions import ImproperlyConfigured
 
-from . import base_impl
-from .schema import TimescaleSchemaEditor
+from timescale.db.backends.timescaledb import base_impl
+from timescale.db.backends.timescaledb.schema import TimescaleSchemaEditor
 
 
 logger = logging.getLogger(__name__)

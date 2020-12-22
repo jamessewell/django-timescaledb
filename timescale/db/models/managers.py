@@ -1,5 +1,5 @@
 from django.db import models
-from timescale.db.querysets import TimescaleQuerySet
+from timescale.db.models.querysets import TimescaleQuerySet
 
 class TimescaleManager(models.Manager):
 

@@ -1,5 +1,5 @@
 from django.db import models
-
+from timescale.db.models.expressions import TimeBucket
 from typing import Dict
 
 class TimescaleQuerySet(models.QuerySet):
