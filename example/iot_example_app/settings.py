@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'timescale',
     'django_extensions',
     "metrics",
 ]
@@ -81,7 +82,7 @@ WSGI_APPLICATION = 'iot_example_app.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'timescale',
+        'ENGINE': 'timescale.db.backends.timescaledb',
         'NAME': os.getenv('DB_DATABASE'),
         'USER': os.getenv('DB_USERNAME'),
         'PASSWORD': os.getenv('DB_PASSWORD'),
