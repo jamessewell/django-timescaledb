@@ -82,7 +82,7 @@ WSGI_APPLICATION = 'iot_example_app.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'timescale.db.backends.timescaledb',
+        'ENGINE': 'timescale.db.backends.postgresql',
         'NAME': os.getenv('DB_DATABASE'),
         'USER': os.getenv('DB_USERNAME'),
         'PASSWORD': os.getenv('DB_PASSWORD'),

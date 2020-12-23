@@ -24,7 +24,7 @@ def backend():
     base_class_name = getattr(
         settings,
         "TIMESCALE_DB_BACKEND_BASE",
-        "django.db.backends.postgresql",
+        "django.contrib.gis.db.backends.postgis",
     )
 
     base_class_module = importlib.import_module(base_class_name + ".base")
