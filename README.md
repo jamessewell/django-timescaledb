@@ -137,14 +137,3 @@ As such the use of the Django's ORM is perfectally suited to this type of data. 
 
   <TimescaleQuerySet [{'histogram': [0, 0, 0, 87, 93, 125, 99, 59, 0, 0, 0, 0], 'device__count': 463}]>
 ```
-
-
-### Custom DB backend
-
-Use a custom PostgreSQL db backend like PostGIS.
-
-```python
-# Configure via settings.py
-
-TIMESCALE_DB_BACKEND_BASE = "django.contrib.gis.db.backends.postgis"
-```
