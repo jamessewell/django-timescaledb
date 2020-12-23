@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "django-timescaledb"
+version = "0.1.0"
+description = ""
+authors = ["Ben Cleary"]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+Django = "^3.1.4"
+psycopg2-binary = "^2.8.6"
+python-dotenv = "^0.15.0"
+psutil = "^5.8.0"
+ipython = "^7.19.0"
+notebook = "^6.1.5"
+django-extensions = "^3.1.0"
+
+[tool.poetry.dev-dependencies]
+pylint = "^2.6.0"
+pytest = "^6.2.1"
+pytest-django = "^4.1.0"
+factory-boy = "^3.1.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
