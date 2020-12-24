@@ -90,7 +90,7 @@ As such the use of the Django's ORM is perfectally suited to this type of data. 
 #### Time Bucket [More Info](https://docs.timescale.com/latest/using-timescaledb/reading-data#time-bucket)
 
 ```python
-  Metric.timescale.filter(time__range=date_range).time_bucket('time', '1 hour')
+  Metric.objects.filter(time__range=date_range).time_bucket('time', '1 hour')
 
   # expected output
 
@@ -107,7 +107,7 @@ As such the use of the Django's ORM is perfectally suited to this type of data. 
 
   ranges = (timezone.now() - timedelta(days=2), timezone.now())
 
-  (Metric.timescale
+  (Metric.objects
     .filter(time__range=ranges)
     .time_bucket_gapfill('time', '1 day', ranges[0], ranges[1])
     .annotate(Avg('temperature')))
