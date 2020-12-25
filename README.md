@@ -68,6 +68,7 @@ from timescale.db.models.models import TimescaleModel
 
 class Metric(TimescaleModel):
    temperature = models.FloatField()
+   
 
 ```
 
@@ -75,9 +76,13 @@ If you already have a table and want to just add a field you can add the Timesca
 
 ```python
 from timescale.db.models.fields import TimescaleDateTimeField
+from timescale.db.models.managers import TimescaleManager
 
 class Metric(models.Model):
   time = TimescaleDateTimeField(interval="1 day")
+
+  objects = models.Manager()
+  timescale = TimescaleManager()
 ```
 
 The name of the field is important as Timescale specific feratures require this as a property of their functions.
@@ -90,7 +95,7 @@ As such the use of the Django's ORM is perfectally suited to this type of data. 
 #### Time Bucket [More Info](https://docs.timescale.com/latest/using-timescaledb/reading-data#time-bucket)
 
 ```python
-  Metric.objects.filter(time__range=date_range).time_bucket('time', '1 hour')
+  Metric.timescale.filter(time__range=date_range).time_bucket('time', '1 hour')
 
   # expected output
 
@@ -107,7 +112,7 @@ As such the use of the Django's ORM is perfectally suited to this type of data. 
 
   ranges = (timezone.now() - timedelta(days=2), timezone.now())
 
-  (Metric.objects
+  (Metric.timescale
     .filter(time__range=ranges)
     .time_bucket_gapfill('time', '1 day', ranges[0], ranges[1])
     .annotate(Avg('temperature')))
@@ -127,7 +132,7 @@ As such the use of the Django's ORM is perfectally suited to this type of data. 
 
   ranges = (timezone.now() - timedelta(days=3), timezone.now())
 
-  (Metric.objects
+  (Metric.timescale
     .filter(time__range=ranges)
     .values('device')
     .histogram(field='temperature', min_value=50.0, max_value=55.0, num_of_buckets=10)
