@@ -1,6 +1,10 @@
 # Django timescaledb
 
-[![pypi-version]][pypi]]
+
+
+[![PyPI version fury.io](https://badge.fury.io/py/django-timescaledb.svg)](https://pypi.python.org/pypi/django-timescaledb/)
+
+
 
 
 A database backend and tooling for Timescaledb.
