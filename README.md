@@ -1,6 +1,6 @@
 # Django timescaledb
 
-[![pypi-version]][pypi]
+[![pypi-version]][pypi]]
 
 
 A database backend and tooling for Timescaledb.
