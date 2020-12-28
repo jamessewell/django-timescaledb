@@ -1,5 +1,8 @@
 # Django timescaledb
 
+[![pypi-version]][pypi]
+
+
 A database backend and tooling for Timescaledb.
 
 Based on [gist](https://gist.github.com/dedsm/fc74f04eb70d78459ff0847ef16f2e7a) from WeRiot.
