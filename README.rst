@@ -128,7 +128,7 @@ Time Bucket Gap Fill `More Info <https://docs.timescale.com/latest/using-timesca
 
       (Metric.timescale
         .filter(time__range=ranges)
-        .time_bucket_gapfill('time', '1 day', ranges[0], ranges[1])
+        .time_bucket_gapfill('time', '1 day', ranges[0], ranges[1], datapoints=240)
         .annotate(Avg('temperature')))
 
       # expected output

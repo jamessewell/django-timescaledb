@@ -121,7 +121,7 @@ As such the use of the Django's ORM is perfectally suited to this type of data. 
 
   (Metric.timescale
     .filter(time__range=ranges)
-    .time_bucket_gapfill('time', '1 day', ranges[0], ranges[1])
+    .time_bucket_gapfill('time', '1 day', ranges[0], ranges[1], datapoints=240)
     .annotate(Avg('temperature')))
 
   # expected output
