@@ -11,7 +11,9 @@ class TimescaleModel(models.Model):
     """
     time = TimescaleDateTimeField(interval="1 day")
 
-    objects = TimescaleManager()
+    objects = models.Manager()
+    timescale = TimescaleManager()
+    
 
     class Meta:
         abstract = True
