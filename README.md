@@ -149,3 +149,8 @@ As such the use of the Django's ORM is perfectally suited to this type of data. 
 
   <TimescaleQuerySet [{'histogram': [0, 0, 0, 87, 93, 125, 99, 59, 0, 0, 0, 0], 'device__count': 463}]>
 ```
+
+## Contributors
+
+* [Ben Cleary](https://github.com/bencleary)
+* [Jonathan Sundqvist](https://github.com/jonathan-s)
