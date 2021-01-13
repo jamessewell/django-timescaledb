@@ -6,6 +6,18 @@ from django.db.models.functions.mixins import (
 from django.utils import timezone
 from datetime import timedelta
 
+class LOCF(models.Func):
+    """
+    A helper class to do Last Observation Carried Forward 
+    """
+    function = 'locf'
+    name = "locf"
+
+    def __init__(self, interval):
+        if not isinstance(interval, models.Value):
+            interval = models.Value(interval)
+        super().__init__(interval)
+
 class Interval(models.Func):
     """
     A helper class to format the interval used by the time_bucket_gapfill function to generate correct timestamps.

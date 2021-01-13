@@ -1,8 +1,10 @@
 from django.db import models
-from timescale.db.models.expressions import TimeBucket, TimeBucketGapFill
+from django.db.models.aggregates import Avg
+from timescale.db.models.expressions import TimeBucket, TimeBucketGapFill, LOCF
 from timescale.db.models.aggregates import Histogram
 from typing import Dict
 from datetime import datetime
+
 
 class TimescaleQuerySet(models.QuerySet):
 
@@ -13,12 +15,15 @@ class TimescaleQuerySet(models.QuerySet):
         if annotations:
             return self.values(bucket=TimeBucket(field, interval)).order_by('-bucket').annotate(**annotations)
         return self.values(bucket=TimeBucket(field, interval)).order_by('-bucket')
-    
-    def time_bucket_gapfill(self, field: str, interval: str, start: datetime, end: datetime, datapoints: int=240):
+
+    def time_bucket_gapfill(self, field: str, interval: str, start: datetime, end: datetime, datapoints: int = 240):
         """
         Wraps the TimescaleDB time_bucket_gapfill function into a queryset method.
         """
         return self.values(bucket=TimeBucketGapFill(field, interval, start, end, datapoints))
+
+    def locf(self, field: str):
+        return self.values(locf=LOCF(Avg(field)))
 
     def histogram(self, field: str, min_value: float, max_value: float, num_of_buckets: int = 5):
         """
