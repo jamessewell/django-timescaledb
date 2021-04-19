@@ -39,6 +39,26 @@ class TimescaleSchemaEditor(DatabaseSchemaEditor):
 
     sql_set_chunk_time_interval = 'SELECT set_chunk_time_interval({table}, interval {interval})'
 
+    def _assert_is_hypertable(self, model):
+        """
+        Assert if the table is a hyper table
+        """
+        table = self.quote_value(model._meta.db_table)
+        error_message = self.quote_value("assert failed - " + table + " should be a hyper table")
+
+        sql = self.sql_assert_is_hypertable.format(table=table, error_message=error_message)
+        self.execute(sql)
+
+    def _assert_is_not_hypertable(self, model):
+        """
+        Assert if the table is not a hyper table
+        """
+        table = self.quote_value(model._meta.db_table)
+        error_message = self.quote_value("assert failed - " + table + " should not be a hyper table")
+
+        sql = self.sql_assert_is_not_hypertable.format(table=table, error_message=error_message)
+        self.execute(sql)
+
     def _drop_primary_key(self, model):
         """
         Hypertables can't partition if the primary key is not
@@ -76,26 +96,6 @@ class TimescaleSchemaEditor(DatabaseSchemaEditor):
                 table=table, partition_column=partition_column, interval=interval, migrate=migrate
             )
             self.execute(sql)
-
-    def _assert_is_hypertable(self, model):
-        """
-        Assert if the table is a hyper table
-        """
-        table = self.quote_value(model._meta.db_table)
-        error_message = self.quote_value("assert failed - " + table + " should be a hyper table")
-
-        sql = self.sql_assert_is_hypertable.format(table=table, error_message=error_message)
-        self.execute(sql)
-
-    def _assert_is_not_hypertable(self, model):
-        """
-        Assert if the table is not a hyper table
-        """
-        table = self.quote_value(model._meta.db_table)
-        error_message = self.quote_value("assert failed - " + table + " should not be a hyper table")
-
-        sql = self.sql_assert_is_not_hypertable.format(table=table, error_message=error_message)
-        self.execute(sql)
 
     def _set_chunk_time_interval(self, model, field):
         """
