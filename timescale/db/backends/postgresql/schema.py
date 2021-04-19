@@ -136,6 +136,7 @@ class TimescaleSchemaEditor(DatabaseSchemaEditor):
             # migrate existing table to hypertable
             self._create_hypertable(model, new_field, True)
         # check if old_field and new_field is type `TimescaleDateTimeField` and `interval` is changed
-        elif isinstance(old_field, TimescaleDateTimeField) and isinstance(new_field, TimescaleDateTimeField):
+        elif isinstance(old_field, TimescaleDateTimeField) and isinstance(new_field, TimescaleDateTimeField) \
+                and old_field.interval != new_field.interval:
             # change chunk-size
             self._set_chunk_time_interval(model, new_field)
