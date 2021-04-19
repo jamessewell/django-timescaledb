@@ -89,7 +89,7 @@ class TimescaleSchemaEditor(DatabaseSchemaEditor):
         migrate = "true" if should_migrate else "false"
 
         if should_migrate and getattr(settings, "TIMESCALE_MIGRATE_HYPERTABLE_WITH_FRESH_TABLE", False):
-            # TODO migrate with fresh table [https://docs.timescale.com/latest/getting-started/migrating-data#same-db]
+            # TODO migrate with fresh table [https://github.com/schlunsen/django-timescaledb/issues/16]
             raise NotImplementedError()
         else:
             sql = self.sql_add_hypertable.format(
