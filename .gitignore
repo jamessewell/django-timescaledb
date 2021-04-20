@@ -5,3 +5,4 @@ django_timescaledb.egg-info/
 .venv
 *ipynb
 example/timescale
+.DS_STORE
