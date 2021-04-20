@@ -79,7 +79,7 @@ class Metric(TimescaleModel):
 
 ```
 
-If you already have a table, you can either add `time` field of type `TimescaleDateTimeField` to your model or rename (if not already named `time`) and change type of existing `DateTimeField` (rename first then run `makemigrations` and then change the type, so that `makemigration` considers it as change in same field instead of removing and adding new field). This also triggers the creation of a hypertable.
+If you already have a table, you can either add `time` field of type `TimescaleDateTimeField` to your model or rename (if not already named `time`) and change type of existing `DateTimeField` (rename first then run `makemigrations` and then change the type, so that `makemigrations` considers it as change in same field instead of removing and adding new field). This also triggers the creation of a hypertable.
 
 ```python
 from timescale.db.models.fields import TimescaleDateTimeField
