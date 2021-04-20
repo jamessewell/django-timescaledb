@@ -77,9 +77,14 @@ Implementation would look like this
        temperature = models.FloatField()
        
 
-If you already have a table and want to just add a field you can add the
-TimescaleDateTimeField to your model. This also triggers the creation of
-a hypertable.
+If you already have a table, you can either add `time`
+field of type `TimescaleDateTimeField` to your model or
+rename (if not already named `time`) and change type of
+existing `DateTimeField` (rename first then run
+`makemigrations` and then change the type, so that
+`makemigrations` considers it as change in same field
+instead of removing and adding new field). This also
+triggers the creation of a hypertable.
 
 .. code:: python
 
