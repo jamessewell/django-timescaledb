@@ -79,7 +79,7 @@ class Metric(TimescaleModel):
 
 ```
 
-If you already have a table and want to just add a field you can add the TimescaleDateTimeField to your model. This also triggers the creation of a hypertable.
+If you already have a table, you can either add `time` field of type `TimescaleDateTimeField` to your model or rename (if not already named `time`) and change type of existing `DateTimeField` (rename first then run `makemigrations` and then change the type, so that `makemigration` considers it as change in same field instead of removing and adding new field). This also triggers the creation of a hypertable.
 
 ```python
 from timescale.db.models.fields import TimescaleDateTimeField
@@ -154,3 +154,4 @@ As such the use of the Django's ORM is perfectally suited to this type of data. 
 
 * [Ben Cleary](https://github.com/bencleary)
 * [Jonathan Sundqvist](https://github.com/jonathan-s)
+* [Harsh Bhikadia](https://github.com/daadu)
