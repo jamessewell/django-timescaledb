@@ -5,9 +5,7 @@ on:
 
 jobs:
   setup_example_project:
-    runs-on: ubuntu-latest
-    environment:
-      name: ${{ needs.extract-branch-name.outputs.branch_name }}
+    runs-on: ubuntu-latest    
 
     steps:
       - uses: actions/checkout@v1
