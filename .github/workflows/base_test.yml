@@ -1,22 +1,11 @@
 name: Django timescaledb - Test basic project setup
 on:
   push:
-    branches: [github-actions]
+    branches: [main]
 
 jobs:
-  extract-branch-name:
+  setup_example_project:
     runs-on: ubuntu-latest
-    outputs:
-      branch_name: ${{ steps.extract_branch.outputs.branch }}
-    steps:
-      - name: Extract branch name
-        shell: bash
-        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
-        id: extract_branch
-
-  build:
-    runs-on: ubuntu-latest
-    needs: extract-branch-name
     environment:
       name: ${{ needs.extract-branch-name.outputs.branch_name }}
 
@@ -37,10 +26,13 @@ jobs:
 
           # Start timescaledb
           docker run -d --name timescaledb -p 5433:5432 -e POSTGRES_PASSWORD=password -e POSTGRES_DB=test timescale/timescaledb:2.1.1-pg13
+          
+          # Wait for db to be ready
           sleep 4
 
+          # Migrate
           DB_PORT=5433 DB_NAME=test DB_USER=postgres PYTHONPATH=../ python3 manage.py migrate
 
-      - name: Setup project
+      - name: Run tests
         run: |-
-          echo "Test"
+          DB_PORT=5433 DB_NAME=test DB_USER=postgres PYTHONPATH=../ python3 manage.py test
