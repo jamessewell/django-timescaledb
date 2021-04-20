@@ -18,5 +18,5 @@ class Metric(models.Model):
     timescale = TimescaleManager()
 
 
-class SampleTest(TimescaleModel):
+class AnotherMetricFromTimeScaleModel(TimescaleModel):
     value = models.FloatField(default=0.0)

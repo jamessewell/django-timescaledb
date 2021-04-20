@@ -1,11 +1,8 @@
 # Django timescaledb
 
-
-
 [![PyPI version fury.io](https://badge.fury.io/py/django-timescaledb.svg)](https://pypi.python.org/pypi/django-timescaledb/)
 
-
-
+![Workflow](https://github.com/schlunsen/django-timescaledb/actions/workflows/ci-tests.yml/badge.svg)
 
 A database backend and tooling for Timescaledb.
 
@@ -55,8 +52,8 @@ TIMESCALE_DB_BACKEND_BASE = "django.contrib.gis.db.backends.postgis"
 
   class TimescaleModel(models.Model):
     """
-    A helper class for using Timescale within Django, has the TimescaleManager and 
-    TimescaleDateTimeField already present. This is an abstract class it should 
+    A helper class for using Timescale within Django, has the TimescaleManager and
+    TimescaleDateTimeField already present. This is an abstract class it should
     be inheritted by another class for use.
     """
     time = TimescaleDateTimeField(interval="1 day")
@@ -75,7 +72,7 @@ from timescale.db.models.models import TimescaleModel
 
 class Metric(TimescaleModel):
    temperature = models.FloatField()
-   
+
 
 ```
 
@@ -93,6 +90,7 @@ class Metric(models.Model):
 ```
 
 The name of the field is important as Timescale specific feratures require this as a property of their functions.
+
 ### Reading Data
 
 "TimescaleDB hypertables are designed to behave in the same manner as PostgreSQL database tables for reading data, using standard SQL commands."
@@ -144,14 +142,14 @@ As such the use of the Django's ORM is perfectally suited to this type of data. 
     .values('device')
     .histogram(field='temperature', min_value=50.0, max_value=55.0, num_of_buckets=10)
     .annotate(Count('device')))
-    
+
   # expected output
 
   <TimescaleQuerySet [{'histogram': [0, 0, 0, 87, 93, 125, 99, 59, 0, 0, 0, 0], 'device__count': 463}]>
 ```
 
 ## Contributors
-
-* [Ben Cleary](https://github.com/bencleary)
-* [Jonathan Sundqvist](https://github.com/jonathan-s)
-* [Harsh Bhikadia](https://github.com/daadu)
+- [Rasmus Schlünsen](https://github.com/schlunsen)
+- [Ben Cleary](https://github.com/bencleary)
+- [Jonathan Sundqvist](https://github.com/jonathan-s)
+- [Harsh Bhikadia](https://github.com/daadu)

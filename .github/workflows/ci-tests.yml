@@ -1,0 +1,48 @@
+name: Django timescaledb - Test basic project setup
+on:
+  push:
+    branches: [main]
+
+jobs:
+  setup-example-project:
+    runs-on: ubuntu-latest
+    env:
+      DB_NAME: test
+      DB_USER: postgres
+      DB_PORT: 5433
+
+    steps:
+      - uses: actions/checkout@v1
+      - name: Set up Python 3.7
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.7
+
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: |-
+          cd example
+          pip install -r requirements.txt
+
+          # Start timescaledb
+          docker run -d --name timescaledb -p 5433:5432 -e POSTGRES_PASSWORD=password -e POSTGRES_DB=test timescale/timescaledb:2.1.1-pg13
+
+          # Wait for db to be ready
+          sleep 4
+
+          # Migrate
+          PYTHONPATH=../ python3 manage.py migrate
+
+      - name: Run tests
+        run: |-
+          cd example
+          PYTHONPATH=../ python3 manage.py test
+
+      - name: Test alter field
+        run: |-
+          cd example
+          sed -i -e 's/1 day/2 days/g' metrics/models.py
+          PYTHONPATH=../ python3 manage.py makemigrations
+          PYTHONPATH=../ python3 manage.py migrate
