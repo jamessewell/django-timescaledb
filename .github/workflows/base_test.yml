@@ -34,6 +34,14 @@ jobs:
         run: |-
           cd example
           pip install -r requirements.txt
+
+          # Start timescaledb
+          docker run -d --name timescaledb -p 5433:5432 -e POSTGRES_PASSWORD=password timescale/timescaledb:2.1.1-pg13
+
+          
+
+
+
           PYTHONPATH=../ python3 manage.py migrate
 
       - name: Setup project
