@@ -4,6 +4,9 @@
 
 [![PyPI version fury.io](https://badge.fury.io/py/django-timescaledb.svg)](https://pypi.python.org/pypi/django-timescaledb/)
 
+![example workflow](https://github.com/schlunsen/django-timescale/actions/workflows/base_test.yml/badge.svg)
+
+
 
 
 
