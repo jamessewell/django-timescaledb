@@ -37,8 +37,9 @@ jobs:
 
           # Start timescaledb
           docker run -d --name timescaledb -p 5433:5432 -e POSTGRES_PASSWORD=password -e POSTGRES_DB=test timescale/timescaledb:2.1.1-pg13
+          sleep 4
 
-          DB_PORT=5433 DB_NAME=test DB_USER=postgres PYTHONPATH=../ python3 manage.py 
+          DB_PORT=5433 DB_NAME=test DB_USER=postgres PYTHONPATH=../ python3 manage.py migrate
 
       - name: Setup project
         run: |-
