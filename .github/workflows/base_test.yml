@@ -36,7 +36,7 @@ jobs:
           pip install -r requirements.txt
 
           # Start timescaledb
-          docker run -d --name timescaledb -p 5433:5432 -e POSTGRES_PASSWORD=password timescale/timescaledb:2.1.1-pg13
+          docker run -d --name timescaledb -p 5433:5432 -e POSTGRES_PASSWORD=password -e POSTGRES_DB=test timescale/timescaledb:2.1.1-pg13
 
           DB_PORT=5433 DB_NAME=postgres DB_USER=postgres PYTHONPATH=../ python3 manage.py migrate
 
