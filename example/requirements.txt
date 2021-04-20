@@ -1,4 +1,4 @@
 Django
-psycopg2_binary
+psycopg2
 django-extensions
 python-dotenv
