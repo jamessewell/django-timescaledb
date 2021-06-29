@@ -73,4 +73,4 @@ class TimeBucketGapFill(models.Func):
     ):
         if not isinstance(interval, models.Value):
             interval = Interval(interval) / datapoints
-        super().__init__(interval, expression, start, end)
+        super().__init__(interval, expression, start, end, *args, **kwargs)
