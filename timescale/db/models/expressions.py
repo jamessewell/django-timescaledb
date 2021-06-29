@@ -1,28 +1,31 @@
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
 from django.db.models.functions.mixins import (
-    FixDurationInputMixin, NumericOutputFieldMixin,
+    FixDurationInputMixin,
+    NumericOutputFieldMixin,
 )
 from django.utils import timezone
 from datetime import timedelta
+
 
 class Interval(models.Func):
     """
     A helper class to format the interval used by the time_bucket_gapfill function to generate correct timestamps.
     Accepts an interval e.g '1 day', '5 days', '1 hour'
     """
-    function = 'INTERVAL'
+
+    function = "INTERVAL"
     template = "%(function)s %(expressions)s"
 
-    def __init__(self, interval):
+    def __init__(self, interval, *args, **kwargs):
         if not isinstance(interval, models.Value):
             interval = models.Value(interval)
-        super().__init__(interval)
-    
+        super().__init__(interval, *args, **kwargs)
+
 
 class TimeBucket(models.Func):
     """
-    Implementation of the time_bucket function from Timescale. 
+    Implementation of the time_bucket function from Timescale.
 
     Read more about it here - https://docs.timescale.com/latest/using-timescaledb/reading-data#time-bucket
 
@@ -36,13 +39,14 @@ class TimeBucket(models.Func):
     ]
 
     """
-    function = 'time_bucket'
+
+    function = "time_bucket"
     name = "time_bucket"
 
-    def __init__(self, expression, interval):
+    def __init__(self, expression, interval, *args, **kwargs):
         if not isinstance(interval, models.Value):
             interval = models.Value(interval)
-        super().__init__(interval, expression)
+        super().__init__(interval, expression, *args, **kwargs)
 
 
 class TimeBucketGapFill(models.Func):
@@ -60,10 +64,13 @@ class TimeBucketGapFill(models.Func):
         ...
     ]
     """
-    function = 'time_bucket_gapfill'
+
+    function = "time_bucket_gapfill"
     name = "time_bucket_gapfill"
 
-    def __init__(self, expression, interval, start, end, datapoints=240):
+    def __init__(
+        self, expression, interval, start, end, *args, datapoints=240, **kwargs
+    ):
         if not isinstance(interval, models.Value):
             interval = Interval(interval) / datapoints
-        super().__init__(interval, expression, start, end)
+        super().__init__(interval, expression, start, end, *args, **kwargs)
