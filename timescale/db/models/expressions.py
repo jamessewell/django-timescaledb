@@ -6,7 +6,7 @@ from django.db.models.functions.mixins import (
 )
 from django.utils import timezone
 from datetime import timedelta
-
+from timescale.db.models.fields import TimescaleDateTimeField
 
 class Interval(models.Func):
     """
@@ -46,7 +46,8 @@ class TimeBucket(models.Func):
     def __init__(self, expression, interval, *args, **kwargs):
         if not isinstance(interval, models.Value):
             interval = models.Value(interval)
-        super().__init__(interval, expression, *args, **kwargs)
+        output_field = TimescaleDateTimeField(interval=interval)
+        super().__init__(interval, expression, output_field=output_field)
 
 
 class TimeBucketGapFill(models.Func):
@@ -73,4 +74,5 @@ class TimeBucketGapFill(models.Func):
     ):
         if not isinstance(interval, models.Value):
             interval = Interval(interval) / datapoints
-        super().__init__(interval, expression, start, end, *args, **kwargs)
+        output_field = TimescaleDateTimeField(interval=interval)
+        super().__init__(interval, expression, start, end, output_field=output_field)
