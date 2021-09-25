@@ -6,13 +6,13 @@ from datetime import datetime
 
 class TimescaleQuerySet(models.QuerySet):
 
-    def time_bucket(self, field: str, interval: str, annotations: Dict = None):
+    def time_bucket(self, field: str, interval: str, offset: str = None, origin: str = None, annotations: Dict = None):
         """
         Wraps the TimescaleDB time_bucket function into a queryset method.
         """
         if annotations:
-            return self.values(bucket=TimeBucket(field, interval)).order_by('-bucket').annotate(**annotations)
-        return self.values(bucket=TimeBucket(field, interval)).order_by('-bucket')
+            return self.values(bucket=TimeBucket(field, interval, offset=offset, origin=origin)).order_by('-bucket').annotate(**annotations)
+        return self.values(bucket=TimeBucket(field, interval, offset=offset, origin=origin)).order_by('-bucket')
     
     def time_bucket_gapfill(self, field: str, interval: str, start: datetime, end: datetime, datapoints: int=240):
         """

@@ -42,17 +42,25 @@ class TimeBucket(models.Func):
 
     function = "time_bucket"
     name = "time_bucket"
+    
 
-    def __init__(self, expression, interval, *args, **kwargs):
+    def __init__(self, expression, interval, offset=None, origin=None, *args, **kwargs):
         if not isinstance(interval, models.Value):
             interval = models.Value(interval)
-        output_field = TimescaleDateTimeField(interval=interval)
+        output_field = TimescaleDateTimeField(interval=interval)   
+        if offset:
+            self.template = "%(function)s(%(expressions)s, '%(offset)s'::INTERVAL)"
+            return super().__init__(interval, expression, offset=offset, origin=origin, output_field=output_field)
+        if origin:
+            
+            self.template = "%(function)s(%(expressions)s, '%(origin)s'::TIMESTAMP)"
+            return super().__init__(interval, expression, offset=offset, origin=origin, output_field=output_field)
         super().__init__(interval, expression, output_field=output_field)
 
 
 class TimeBucketGapFill(models.Func):
     """
-    IMplementation of the time_bucket_gapfill function from Timescale
+    Implementation of the time_bucket_gapfill function from Timescale
 
     Read more about it here - https://docs.timescale.com/latest/using-timescaledb/reading-data#gap-filling
 
