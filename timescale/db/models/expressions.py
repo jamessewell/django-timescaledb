@@ -52,7 +52,6 @@ class TimeBucket(models.Func):
             self.template = "%(function)s(%(expressions)s, '%(offset)s'::INTERVAL)"
             return super().__init__(interval, expression, offset=offset, origin=origin, output_field=output_field)
         if origin:
-            
             self.template = "%(function)s(%(expressions)s, '%(origin)s'::TIMESTAMP)"
             return super().__init__(interval, expression, offset=offset, origin=origin, output_field=output_field)
         super().__init__(interval, expression, output_field=output_field)
