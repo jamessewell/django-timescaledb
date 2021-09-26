@@ -2,3 +2,6 @@ Django
 psycopg2
 django-extensions
 python-dotenv
+
+# For testing
+pandas
