@@ -8,6 +8,7 @@ from django.utils import timezone
 from datetime import timedelta
 from timescale.db.models.fields import TimescaleDateTimeField
 
+
 class Interval(models.Func):
     """
     A helper class to format the interval used by the time_bucket_gapfill function to generate correct timestamps.
@@ -42,6 +43,33 @@ class TimeBucket(models.Func):
 
     function = "time_bucket"
     name = "time_bucket"
+
+    def __init__(self, expression, interval, *args, **kwargs):
+        if not isinstance(interval, models.Value):
+            interval = models.Value(interval)
+        output_field = TimescaleDateTimeField(interval=interval)
+        super().__init__(interval, expression, output_field=output_field)
+
+
+class TimeBucketNG(models.Func):
+    """
+    Implementation of the time_bucket_ng function from Timescale.
+
+    Read more about it here - https://docs.timescale.com/api/latest/hyperfunctions/time_bucket_ng/#timescaledb-experimental-time-bucket-ng
+
+    Response:
+
+    [
+        {'bucket': '2020-12-01T00:00:00+00:00', 'devices': 12},
+        {'bucket': '2020-11-01T00:00:00+00:00', 'devices': 12},
+        {'bucket': '2020-10-01T00:00:00+00:00', 'devices': 12},
+        {'bucket': '2020-09-01T00:00:00+00:00', 'devices': 12},
+    ]
+
+    """
+
+    function = "timescaledb_experimental.time_bucket_ng"
+    name = "timescaledb_experimental.time_bucket_ng"
 
     def __init__(self, expression, interval, *args, **kwargs):
         if not isinstance(interval, models.Value):
