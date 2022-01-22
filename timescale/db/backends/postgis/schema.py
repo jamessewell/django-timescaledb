@@ -4,7 +4,8 @@ from timescale.db.models.fields import TimescaleDateTimeField
 
 
 class TimescaleSchemaEditor(PostGISSchemaEditor):
-    sql_is_hypertable = 'SELECT * FROM timescaledb_information.hypertables WHERE hypertable_name = {table}'
+    sql_is_hypertable = '''SELECT * FROM timescaledb_information.hypertables 
+    WHERE hypertable_name = {table}{extra_condition}'''
 
     sql_assert_is_hypertable = (
             'DO $do$ BEGIN '
@@ -38,6 +39,8 @@ class TimescaleSchemaEditor(PostGISSchemaEditor):
 
     sql_set_chunk_time_interval = 'SELECT set_chunk_time_interval({table}, interval {interval})'
 
+    sql_hypertable_is_in_schema = '''hypertable_schema = {schema_name}'''
+
     def _assert_is_hypertable(self, model):
         """
         Assert if the table is a hyper table
@@ -45,7 +48,11 @@ class TimescaleSchemaEditor(PostGISSchemaEditor):
         table = self.quote_value(model._meta.db_table)
         error_message = self.quote_value("assert failed - " + table + " should be a hyper table")
 
-        sql = self.sql_assert_is_hypertable.format(table=table, error_message=error_message)
+        extra_condition = self._get_extra_condition()
+
+        sql = self.sql_assert_is_hypertable.format(table=table, error_message=error_message,
+                                                   extra_condition=extra_condition)
+
         self.execute(sql)
 
     def _assert_is_not_hypertable(self, model):
@@ -55,7 +62,11 @@ class TimescaleSchemaEditor(PostGISSchemaEditor):
         table = self.quote_value(model._meta.db_table)
         error_message = self.quote_value("assert failed - " + table + " should not be a hyper table")
 
-        sql = self.sql_assert_is_not_hypertable.format(table=table, error_message=error_message)
+        extra_condition = self._get_extra_condition()
+
+        sql = self.sql_assert_is_not_hypertable.format(table=table, error_message=error_message,
+                                                       extra_condition=extra_condition)
+
         self.execute(sql)
 
     def _drop_primary_key(self, model):
@@ -139,3 +150,15 @@ class TimescaleSchemaEditor(PostGISSchemaEditor):
                 and old_field.interval != new_field.interval:
             # change chunk-size
             self._set_chunk_time_interval(model, new_field)
+
+    def _get_extra_condition(self):
+        extra_condition = ''
+
+        try:
+            if self.connection.schema_name:
+                schema_name = self.quote_value(self.connection.schema_name)
+                extra_condition = ' AND ' + self.sql_hypertable_is_in_schema.format(schema_name=schema_name)
+        except:
+            pass
+
+        return extra_condition
