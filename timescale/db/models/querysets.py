@@ -1,7 +1,7 @@
 from django.db import models
 from timescale.db.models.expressions import TimeBucket, TimeBucketGapFill, TimeBucketNG
 from timescale.db.models.aggregates import Histogram
-from typing import Dict
+from typing import Dict, Optional
 from datetime import datetime
 
 
@@ -23,7 +23,7 @@ class TimescaleQuerySet(models.QuerySet):
             return self.values(bucket=TimeBucketNG(field, interval)).order_by('-bucket').annotate(**annotations)
         return self.values(bucket=TimeBucketNG(field, interval)).order_by('-bucket')
 
-    def time_bucket_gapfill(self, field: str, interval: str, start: datetime, end: datetime, datapoints: int = 240):
+    def time_bucket_gapfill(self, field: str, interval: str, start: datetime, end: datetime, datapoints: Optional[int] = None):
         """
         Wraps the TimescaleDB time_bucket_gapfill function into a queryset method.
         """

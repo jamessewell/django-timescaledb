@@ -1,5 +1,6 @@
 from django.db import models
 from timescale.db.models.querysets import *
+from typing import Optional
 
 
 class TimescaleManager(models.Manager):
@@ -17,7 +18,7 @@ class TimescaleManager(models.Manager):
     def time_bucket_ng(self, field, interval):
         return self.get_queryset().time_bucket_ng(field, interval)
 
-    def time_bucket_gapfill(self, field: str, interval: str, start: datetime, end: datetime, datapoints: int = 240):
+    def time_bucket_gapfill(self, field: str, interval: str, start: datetime, end: datetime, datapoints: Optional[int] = None):
         return self.get_queryset().time_bucket_gapfill(field, interval, start, end, datapoints)
 
     def histogram(self, field: str, min_value: float, max_value: float, num_of_buckets: int = 5):
