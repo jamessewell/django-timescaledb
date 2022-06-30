@@ -98,9 +98,11 @@ class TimeBucketGapFill(models.Func):
     name = "time_bucket_gapfill"
 
     def __init__(
-        self, expression, interval, start, end, *args, datapoints=240, **kwargs
+        self, expression, interval, start, end, datapoints=None, *args, **kwargs
     ):
         if not isinstance(interval, models.Value):
-            interval = Interval(interval) / datapoints
+            interval = Interval(interval)
+            if datapoints:
+                interval = interval / datapoints
         output_field = TimescaleDateTimeField(interval=interval)
         super().__init__(interval, expression, start, end, output_field=output_field)
