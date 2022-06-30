@@ -36,5 +36,7 @@ class TimescaleDBTests(TestCase):
                    .annotate(temperature__first=First('temperature', 'time')))
 
         # verify
-        self.assertEqual(metrics[0]["temperature__first"], 8.0)
-        self.assertEqual(metrics[1]["temperature__first"], 14.0)
+        # XXX: Remove
+        self.assertEqual(metrics[0]["temperature__first"], 14.0)
+        self.assertEqual(metrics[1]["temperature__first"], 8.0)
+        
