@@ -56,7 +56,7 @@ class TimeBucket(models.Func):
                 offset = models.Value(offset)
             args.append(offset)
         output_field = TimescaleDateTimeField(interval=interval)
-        super().__init__(*args, **kwargs, output_field=output_field)
+        super().__init__(*args, output_field=output_field)
 
 
 class TimeBucketNG(models.Func):
