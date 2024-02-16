@@ -77,7 +77,8 @@ class TimescaleSchemaEditor(PostGISSchemaEditor):
         """
         db_table = model._meta.db_table
         table = self.quote_name(db_table)
-        pkey = self.quote_name(f'{db_table}_pkey')
+        pkey_length = self.connection.ops.max_name_length()
+        pkey = self.quote_name(f'{db_table[:pkey_length - 5]}_pkey')
 
         sql = self.sql_drop_primary_key.format(table=table, pkey=pkey)
 
