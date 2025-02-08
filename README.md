@@ -46,7 +46,7 @@ If you already make use of a custom PostgreSQL db backend you can set the path i
 TIMESCALE_DB_BACKEND_BASE = "django.contrib.gis.db.backends.postgis"
 ```
 
-3. Inherit from the TimescaleModel. A [hypertable](https://docs.timescale.com/latest/using-timescaledb/hypertables#react-docs) will automatically be created.
+3. Inherit from the TimescaleModel. A [hypertable](https://docs.timescale.com/use-timescale/latest/hypertables/about-hypertables/) will automatically be created.
 
 ```python
 
@@ -97,7 +97,7 @@ The name of the field is important as Timescale specific feratures require this 
 
 As such the use of the Django's ORM is perfectally suited to this type of data. By leveraging a custom model manager and queryset we can extend the queryset methods to include Timescale functions.
 
-#### Time Bucket [More Info](https://docs.timescale.com/latest/using-timescaledb/reading-data#time-bucket)
+#### Time Bucket [More Info](https://docs.timescale.com/use-timescale/latest/time-buckets/about-time-buckets/)
 
 ```python
   Metric.timescale.filter(time__range=date_range).time_bucket('time', '1 hour')
@@ -107,7 +107,7 @@ As such the use of the Django's ORM is perfectally suited to this type of data. 
   <TimescaleQuerySet [{'bucket': datetime.datetime(2020, 12, 22, 11, 0, tzinfo=<UTC>)}, ... ]>
 ```
 
-#### Time Bucket Gap Fill [More Info](https://docs.timescale.com/latest/using-timescaledb/reading-data#gap-filling)
+#### Time Bucket Gap Fill [More Info](https://docs.timescale.com/use-timescale/latest/hyperfunctions/gapfilling-interpolation/time-bucket-gapfill/)
 
 ```python
   from metrics.models import *
@@ -127,7 +127,7 @@ As such the use of the Django's ORM is perfectally suited to this type of data. 
   <TimescaleQuerySet [{'bucket': datetime.datetime(2020, 12, 21, 21, 24, tzinfo=<UTC>), 'temperature__avg': None}, ...]>
 ```
 
-#### Histogram [More Info](https://docs.timescale.com/latest/using-timescaledb/reading-data#histogram)
+#### Histogram [More Info](https://docs.timescale.com/api/latest/hyperfunctions/histogram/)
 
 ```python
   from metrics.models import *
