@@ -22,6 +22,20 @@ class Histogram(models.Aggregate):
         super().__init__(expression, min_value, max_value, bucket)
 
 
+class LTTB(models.Func):
+    function = 'lttb'
+    name = 'lttb'
+    output_field = models.DateTimeField()
+
+    def __init__(self, time, value, count, field):
+        self.fieldname = field
+        super().__init__(time, value, count)
+
+    def as_sql(self, compiler, connection, **extra_context):
+        sql, params = super().as_sql(compiler, connection, **extra_context)
+        return f'(unnest({sql})).{self.fieldname}', params
+
+
 class Last(models.Aggregate):
     function = 'last'
     name = 'last'
