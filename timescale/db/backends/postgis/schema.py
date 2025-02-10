@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.gis.db.backends.postgis.schema import PostGISSchemaEditor
 
 from timescale.db.models.fields import TimescaleDateTimeField
