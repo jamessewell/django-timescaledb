@@ -95,7 +95,7 @@ The name of the field is important as Timescale specific feratures require this 
 
 "TimescaleDB hypertables are designed to behave in the same manner as PostgreSQL database tables for reading data, using standard SQL commands."
 
-As such the use of the Django's ORM is perfectally suited to this type of data. By leveraging a custom model manager and queryset we can extend the queryset methods to include Timescale functions.
+As such the use of the Django's ORM is perfectly suited to this type of data. By leveraging a custom model manager and queryset we can extend the queryset methods to include Timescale functions.
 
 #### Time Bucket [More Info](https://docs.timescale.com/use-timescale/latest/time-buckets/about-time-buckets/)
 
