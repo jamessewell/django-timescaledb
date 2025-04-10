@@ -1,6 +1,6 @@
 from django.db import models
 from timescale.db.models.expressions import TimeBucket, TimeBucketGapFill, TimeBucketNG
-from timescale.db.models.aggregates import Histogram
+from timescale.db.models.aggregates import Histogram, LTTB
 from typing import Dict, Optional
 from datetime import datetime
 
@@ -34,6 +34,15 @@ class TimescaleQuerySet(models.QuerySet):
         Wraps the TimescaleDB histogram function into a queryset method.
         """
         return self.values(histogram=Histogram(field, min_value, max_value, num_of_buckets))
+
+    def lttb(self, time: str, value: str, num_of_counts: int = 20):
+        """
+        Wraps the TimescaleDB toolkit lttb function into a queryset method.
+        """
+        return self.values(
+            lttb_t=LTTB(time, value, num_of_counts, time),
+            lttb_v=LTTB(time, value, num_of_counts, value)
+        )
 
     def to_list(self, normalise_datetimes: bool = False):
         if normalise_datetimes:
