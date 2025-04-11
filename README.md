@@ -91,6 +91,14 @@ class Metric(models.Model):
 
 The name of the field is important as Timescale specific feratures require this as a property of their functions.
 
+### Writing Data
+
+Writing data is done though the normal Django ORM.
+
+```python
+    Metric.objects.create(temperature=5.2, time=now())
+```
+
 ### Reading Data
 
 "TimescaleDB hypertables are designed to behave in the same manner as PostgreSQL database tables for reading data, using standard SQL commands."
