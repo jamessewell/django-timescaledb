@@ -148,8 +148,120 @@ As such the use of the Django's ORM is perfectally suited to this type of data. 
   <TimescaleQuerySet [{'histogram': [0, 0, 0, 87, 93, 125, 99, 59, 0, 0, 0, 0], 'device__count': 463}]>
 ```
 
+### Data Retention and Compression
+
+TimescaleDB provides powerful features for managing data lifecycle and storage efficiency through retention policies and compression. Django-TimescaleDB provides programmatic APIs for these features.
+
+> **Note:** The current implementation uses a programmatic approach where you call methods on the `timescale` manager. These methods need to be called explicitly in your code (e.g., in a migration, management command, view, or Django shell). A future enhancement may provide a declarative approach where policies can be defined directly in model classes.
+
+#### Data Retention Policy [More Info](https://docs.timescale.com/use-timescale/latest/data-retention/)
+
+Data retention policies automatically remove old data based on time, helping manage database size.
+
+```python
+  from metrics.models import Metric
+  from datetime import timedelta
+
+  # This code can be run in a Django shell, migration, management command, or view
+
+  # Add a retention policy to drop data older than 90 days
+  job_id = Metric.timescale.add_retention_policy(
+      drop_after='90 days',
+      schedule_interval='1 day',
+      if_not_exists=True
+  )
+
+  # Or using timedelta objects
+  job_id = Metric.timescale.add_retention_policy(
+      drop_after=timedelta(days=90),
+      schedule_interval=timedelta(days=1)
+  )
+
+  # Remove a retention policy when no longer needed
+  Metric.timescale.remove_retention_policy(if_exists=True)
+```
+
+#### Compression [More Info](https://docs.timescale.com/use-timescale/latest/compression/)
+
+Compression reduces storage requirements by compressing older chunks of data.
+
+```python
+  from metrics.models import Metric
+  from datetime import timedelta
+
+  # This code can be run in a Django shell, migration, management command, or view
+
+  # Enable compression on the hypertable
+  Metric.timescale.enable_compression(
+      compress_orderby=['time'],
+      compress_segmentby=['device']
+  )
+
+  # Add a compression policy to compress data older than 30 days
+  job_id = Metric.timescale.add_compression_policy(
+      compress_after='30 days',
+      schedule_interval='1 day',
+      if_not_exists=True
+  )
+
+  # Or using timedelta objects
+  job_id = Metric.timescale.add_compression_policy(
+      compress_after=timedelta(days=30),
+      schedule_interval=timedelta(days=1)
+  )
+
+  # Get compression statistics
+  stats = Metric.timescale.get_compression_stats()
+
+  # Remove a compression policy when no longer needed
+  Metric.timescale.remove_compression_policy(if_exists=True)
+```
+
+#### Example Usage in a Django Migration
+
+```python
+from django.db import migrations
+
+def setup_timescale_policies(apps, schema_editor):
+    # Get the model from the apps registry
+    Metric = apps.get_model('metrics', 'Metric')
+
+    # Enable compression
+    Metric.timescale.enable_compression(
+        compress_orderby=['time'],
+        compress_segmentby=['device']
+    )
+
+    # Add compression policy
+    Metric.timescale.add_compression_policy(
+        compress_after='30 days',
+        if_not_exists=True
+    )
+
+    # Add retention policy
+    Metric.timescale.add_retention_policy(
+        drop_after='90 days',
+        if_not_exists=True
+    )
+
+def reverse_timescale_policies(apps, schema_editor):
+    Metric = apps.get_model('metrics', 'Metric')
+    Metric.timescale.remove_compression_policy(if_exists=True)
+    Metric.timescale.remove_retention_policy(if_exists=True)
+
+class Migration(migrations.Migration):
+    dependencies = [
+        ('metrics', '0001_initial'),
+    ]
+
+    operations = [
+        migrations.RunPython(setup_timescale_policies, reverse_timescale_policies),
+    ]
+```
+
 ## Contributors
 - [Rasmus Schlünsen](https://github.com/schlunsen)
 - [Ben Cleary](https://github.com/bencleary)
 - [Jonathan Sundqvist](https://github.com/jonathan-s)
 - [Harsh Bhikadia](https://github.com/daadu)
+- [Reese Jenner](https://github.com/voarsh2)
