@@ -72,15 +72,10 @@ class TimescaleSchemaEditor(DatabaseSchemaEditor):
 
         self.execute(sql)
 
-    # def quote_name(self, name):
-    #     if reg.findall(name):
-    #         return '"%s"' % name
-    #     return super().quote_name(name)
-
-    def quote_upper_name(self, name):
+    def quote_upper_value(self, name):
         if reg.findall(name):
             return '\'"%s"\'' % name
-        return self.quote_name(name)
+        return self.quote_value(name)
 
     def _drop_primary_key(self, model):
         """
@@ -111,7 +106,7 @@ class TimescaleSchemaEditor(DatabaseSchemaEditor):
         interval = self.quote_value(field.interval)
         # cdchen-2020427: Fix for upper case table name
         # table = self.quote_value(model._meta.db_table)
-        table = self.quote_upper_name(model._meta.db_table)
+        table = self.quote_upper_value(model._meta.db_table)
         migrate = "true" if should_migrate else "false"
 
         if should_migrate and getattr(settings, "TIMESCALE_MIGRATE_HYPERTABLE_WITH_FRESH_TABLE", False):
