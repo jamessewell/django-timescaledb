@@ -2,7 +2,9 @@ from django.conf import settings
 from django.db.backends.postgresql.schema import DatabaseSchemaEditor
 
 from timescale.db.models.fields import TimescaleDateTimeField
+import re
 
+reg = re.compile(r"[A-Z]")
 
 class TimescaleSchemaEditor(DatabaseSchemaEditor):
     sql_is_hypertable = '''SELECT * FROM timescaledb_information.hypertables 
@@ -70,6 +72,11 @@ class TimescaleSchemaEditor(DatabaseSchemaEditor):
 
         self.execute(sql)
 
+    def quote_upper_value(self, name):
+        if reg.findall(name):
+            return '\'"%s"\'' % name
+        return self.quote_value(name)
+
     def _drop_primary_key(self, model):
         """
         Hypertables can't partition if the primary key is not
@@ -78,12 +85,22 @@ class TimescaleSchemaEditor(DatabaseSchemaEditor):
         """
         db_table = model._meta.db_table
         table = self.quote_name(db_table)
-        pkey_length = self.connection.ops.max_name_length()
-        pkey = self.quote_name(f'{db_table[:pkey_length - 5]}_pkey')
-
-        sql = self.sql_drop_primary_key.format(table=table, pkey=pkey)
-
-        self.execute(sql)
+        ## cdchen-20250507: Get primary key from information_schema.table_constraints
+        #
+        # pkey_length = self.connection.ops.max_name_length()
+        # pkey = self.quote_name(f'{db_table[:pkey_length - 5]}_pkey')
+        #
+        # sql = self.sql_drop_primary_key.format(table=table, pkey=pkey)
+        #
+        # self.execute(sql)
+        with self.connection.cursor() as cursor:
+            sql = "SELECT constraint_name FROM information_schema.table_constraints WHERE constraint_type = 'PRIMARY' AND table_name = '{table}' ".format(table=table)
+            cursor.execute(sql)
+            row = cursor.fetchone()
+            if row:
+                pkey = row[0]
+                sql = self.sql_drop_primary_key.format(table=table, pkey=pkey)
+                cursor.execute(sql)
 
     def _create_hypertable(self, model, field, should_migrate=False):
         """
@@ -92,12 +109,15 @@ class TimescaleSchemaEditor(DatabaseSchemaEditor):
         # assert that the table is not already a hypertable
         self._assert_is_not_hypertable(model)
 
-        # drop primary key of the table
-        self._drop_primary_key(model)
+        # drop primary key of the table if not retain
+        if not field.retain_primary_key:
+            self._drop_primary_key(model)
 
         partition_column = self.quote_value(field.column)
         interval = self.quote_value(field.interval)
-        table = self.quote_value(model._meta.db_table)
+        # cdchen-2020427: Fix for upper case table name
+        # table = self.quote_value(model._meta.db_table)
+        table = self.quote_upper_value(model._meta.db_table)
         migrate = "true" if should_migrate else "false"
 
         if should_migrate and getattr(settings, "TIMESCALE_MIGRATE_HYPERTABLE_WITH_FRESH_TABLE", False):
