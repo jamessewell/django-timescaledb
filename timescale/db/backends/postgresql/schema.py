@@ -109,8 +109,9 @@ class TimescaleSchemaEditor(DatabaseSchemaEditor):
         # assert that the table is not already a hypertable
         self._assert_is_not_hypertable(model)
 
-        # drop primary key of the table
-        self._drop_primary_key(model)
+        # drop primary key of the table if not retain
+        if not field.retain_primary_key:
+            self._drop_primary_key(model)
 
         partition_column = self.quote_value(field.column)
         interval = self.quote_value(field.interval)
